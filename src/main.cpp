@@ -1,41 +1,23 @@
+#include <Adafruit_AHTX0.h>
 #include "Arduino.h"
-#include "Wire.h"
-#include "Adafruit_AHTX0.h"
-#define ENCODER_A 27
-#define ENCODER_B 26
-#define BUTTON 25
-int encoderPos = 0;
-int lastEncoderPos = 0;
-int buttonState = 0;
-int lastButtonState = 0;
-unsigned long lastPrint = 0; // Время последнего вывода
-unsigned long printInterval = 1000; // Интервал вывода в миллисекундах
-
+Adafruit_AHTX0 aht;
 
 void setup() {
- pinMode(ENCODER_A, INPUT_PULLUP);
- pinMode(ENCODER_B, INPUT_PULLUP);
- pinMode(BUTTON, INPUT_PULLUP);
- Serial.begin(115200);
+  Serial.begin(115200);
+  Serial.println("Adafruit AHT10/AHT20 demo!");
+
+  if (! aht.begin()) {
+    Serial.println("Could not find AHT? Check wiring");
+    while (1) delay(10); 
+  }
+  Serial.println("AHT10 or AHT20 found");
 }
 
 void loop() {
- encoderPos += (digitalRead(ENCODER_A) == digitalRead(ENCODER_B)) ? -1 : 1;
- buttonState = digitalRead(BUTTON);
- if (buttonState != lastButtonState) {
- if (buttonState == LOW) {
- encoderPos = 0;
- Serial.println("Кнопка нажата!");
-    }
- lastButtonState = buttonState;
-  }
+  sensors_event_t humidity, temp;
+  aht.getEvent(&humidity, &temp);// populate temp and humidity objects with fresh data
+  Serial.print("Temperature: "); Serial.print(temp.temperature); Serial.println(" degrees C");
+  Serial.print("Humidity: "); Serial.print(humidity.relative_humidity); Serial.println("% rH");
 
- if (encoderPos != lastEncoderPos) {
-    lastEncoderPos = encoderPos;
-    unsigned long currentMillis = millis();
-    if (currentMillis - lastPrint >= printInterval) {
-      lastPrint = currentMillis;
-      Serial.println(encoderPos, DEC);
-    
-    }}
+  delay(500);
 }
