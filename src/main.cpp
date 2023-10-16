@@ -1,5 +1,6 @@
 // полное демо
 #include <Arduino.h>
+#include <Adafruit_AHTX0.h>
 // #define EB_NO_FOR           // отключить поддержку pressFor/holdFor/stepFor и счётчик степов (экономит 2 байта оперативки)
 // #define EB_NO_CALLBACK      // отключить обработчик событий attach (экономит 2 байта оперативки)
 // #define EB_NO_COUNTER       // отключить счётчик энкодера (экономит 4 байта оперативки)
@@ -13,6 +14,7 @@
 
 #include <EncButton.h>
 EncButton eb(27, 26, 25);
+Adafruit_AHTX0 aht;
 // EncButton eb(2, 3, 4, INPUT); // + режим пинов энкодера
 // EncButton eb(2, 3, 4, INPUT, INPUT_PULLUP); // + режим пинов кнопки
 
@@ -25,6 +27,12 @@ void setup() {
 
     // сбросить счётчик энкодера
     eb.counter = 0;
+
+    if (! aht.begin()) {
+    Serial.println("Could not find AHT? Check wiring");
+    while (1) delay(10); 
+  }
+    Serial.println("AHT10 or AHT20 found");
 }
 
 void loop() {
@@ -51,8 +59,17 @@ void loop() {
     if (eb.rightH()) Serial.println("rightH");
 
     // кнопка
-    if (eb.press()) Serial.println("press");
-    if (eb.click()) Serial.println("click");
+    if (eb.press()) {
+      Serial.println("press");
+      }
+    if (eb.click()) {
+      Serial.println("click");
+      sensors_event_t humidity, temp;
+      aht.getEvent(&humidity, &temp);// populate temp and humidity objects with fresh data
+      Serial.print("Temperature: "); Serial.print(temp.temperature); Serial.println(" degrees C");
+      Serial.print("Humidity: "); Serial.print(humidity.relative_humidity); Serial.println("% rH");
+
+      delay(500);}
 
     if (eb.release()) {
       Serial.println("release");
@@ -100,6 +117,5 @@ void loop() {
     // вывести количество кликов
     if (eb.hasClicks()) {
         Serial.print("has clicks: ");
-        Serial.println(eb.getClicks());
-    }
-}
+        Serial.println(eb.getClicks());   
+}}
