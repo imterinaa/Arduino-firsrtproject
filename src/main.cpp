@@ -1,4 +1,4 @@
-// полное демо
+
 #include <Arduino.h>
 #include <Adafruit_AHTX0.h>
 // #define EB_NO_FOR           // отключить поддержку pressFor/holdFor/stepFor и счётчик степов (экономит 2 байта оперативки)
@@ -12,8 +12,10 @@
 // #define EB_STEP_TIME 200    // таймаут импульсного удержания (кнопка)
 // #define EB_FAST_TIME 30     // таймаут быстрого поворота (энкодер)
 
+// SDA = D21; SCL = D22;
+
 #include <EncButton.h>
-EncButton eb(27, 26, 25);
+EncButton eb(27, 26, 25); // S1 = 27; S2 = 26; Key = 25;
 Adafruit_AHTX0 aht;
 // EncButton eb(2, 3, 4, INPUT); // + режим пинов энкодера
 // EncButton eb(2, 3, 4, INPUT, INPUT_PULLUP); // + режим пинов кнопки
