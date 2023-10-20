@@ -9,7 +9,7 @@ class wrapperAHT{
         Adafruit_AHTX0 aht;
         sensors_event_t humidity, temp;
     public: 
-        void aht_setup(){
+        void setup(){
 
              if (! aht.begin()) {
                 Serial.println("Could not find AHT? Check wiring");}
@@ -30,7 +30,7 @@ class wrapperEncoder{
         wrapperEncoder(){
             enc = EncButton(27,26,25);
         }
-        void enc_setup(){
+        void setup(){
              enc.setBtnLevel(LOW);
              enc.setClickTimeout(500);
 
@@ -107,6 +107,6 @@ class wrapperEncoder{
         }
                 
         }
-        };
+};
 
-#endif _WRAPPER_H_
+#endif // _WRAPPER_H_

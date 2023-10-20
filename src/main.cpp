@@ -20,7 +20,7 @@
 
 
 #include <Arduino.h>
-#include "Wrapper.cpp"
+#include "Wrapper.h"
 
 wrapperAHT aht;
 wrapperEncoder enc;
@@ -28,8 +28,8 @@ wrapperEncoder enc;
 void setup() {
 
 	Serial.begin(115200);
-	aht.aht_setup();
-	enc.enc_setup();
+	aht.setup();
+	enc.setup();
 }
 
 void loop() {
